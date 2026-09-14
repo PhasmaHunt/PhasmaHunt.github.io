@@ -1,0 +1,478 @@
+// ============================================================
+// Personal Dark Minimal Theme for Icarus
+// 字体：Helvetica / Consolas / Microsoft YaHei
+// 主题色：#6C9BFF
+// ============================================================
+
+// ---------- 基础色板 ----------
+$theme-bg ?= #121417
+$theme-bg-elevated ?= #1A1D23
+$theme-bg-soft ?= #20242B
+$theme-bg-nav ?= #15171C
+$theme-border ?= #2A2F38
+$theme-border-strong ?= #3A414D
+
+$theme-text ?= #E8EAED
+$theme-text-secondary ?= #B8C0CC
+$theme-text-muted ?= #7C8595
+$theme-text-strong ?= #FFFFFF
+$theme-text-inverse ?= #0E1013
+
+$theme-accent ?= #6C9BFF
+$theme-accent-hover ?= #8AB0FF
+$theme-accent-active ?= #4F82E6
+$theme-accent-soft ?= rgba(108, 155, 255, 0.12)
+$theme-accent-border ?= rgba(108, 155, 255, 0.35)
+$theme-focus-ring ?= rgba(108, 155, 255, 0.45)
+$theme-selection-bg ?= rgba(108, 155, 255, 0.30)
+
+$theme-code-bg ?= #0E1013
+$theme-code-text ?= #D6E2FF
+
+// ---------- 动效时长 ----------
+$t-fast ?= 0.12s
+$t-base ?= 0.15s
+$t-slow ?= 0.18s
+$ease ?= ease
+
+// ---------- 字体 ----------
+$family-sans-serif ?= Helvetica, 'Microsoft YaHei', Arial, sans-serif
+$family-code ?= Consolas, 'Microsoft YaHei', monospace
+
+// ---------- 圆角与阴影 ----------
+$radius ?= 6px
+$radius-small ?= 4px
+$radius-medium ?= 6px
+$radius-large ?= 8px
+$shadow ?= none
+$shadow-small ?= 0 1px 2px rgba(0, 0, 0, 0.25)
+$shadow-medium ?= 0 4px 12px rgba(0, 0, 0, 0.35)
+$shadow-large ?= 0 8px 24px rgba(0, 0, 0, 0.45)
+
+// ---------- 映射到 Icarus 变量 ----------
+$white ?= $theme-bg
+$white-bis ?= $theme-bg-elevated
+$grey ?= $theme-text-muted
+$black ?= $theme-text
+$black-bis ?= $theme-text-secondary
+
+$orange ?= $theme-accent
+$yellow ?= $theme-accent
+$green ?= #4AE58C
+$blue ?= $theme-accent
+$purple ?= #BD8FE8
+$red ?= #FF5A76
+
+$primary ?= $theme-accent
+$info ?= $theme-accent
+$success ?= $green
+$warning ?= $theme-accent
+$danger ?= $red
+
+$primary-invert ?= $theme-text-inverse
+$info-invert ?= $theme-text-inverse
+$success-invert ?= $theme-text-inverse
+$warning-invert ?= $theme-text-inverse
+$danger-invert ?= $theme-text-inverse
+
+$scheme-main ?= $theme-bg
+$link ?= $theme-accent
+$link-hover ?= $theme-accent-hover
+$link-active ?= $theme-accent-active
+$link-focus ?= $theme-accent
+$text ?= $theme-text
+$text-strong ?= $theme-text-strong
+$text-light ?= $theme-text-secondary
+$body-background-color ?= $theme-bg
+
+$input-color ?= $theme-text
+$input-background-color ?= $theme-bg-soft
+$input-border-color ?= $theme-border
+$input-placeholder-color ?= rgba($theme-text-muted, 0.8)
+$input-hover-border-color ?= $theme-accent-border
+$input-focus-border-color ?= $theme-accent
+
+$footer-color ?= $theme-text-secondary
+$footer-background-color ?= $theme-bg-nav
+
+$navbar-background-color ?= $theme-bg-nav
+$navbar-item-color ?= $theme-text-secondary
+$navbar-item-active-color ?= $theme-accent
+$navbar-item-hover-color ?= $theme-accent
+$navbar-item-hover-background-color ?= rgba(255, 255, 255, 0.05)
+
+$card-background-color ?= $theme-bg-elevated
+
+$menu-label-color ?= $theme-text-muted
+$menu-item-hover-color ?= $theme-text-strong
+$menu-item-hover-background-color ?= $theme-accent-soft
+$menu-item-active-color ?= $theme-text-strong
+$menu-item-active-background-color ?= $theme-accent-soft
+$menu-list-border-left ?= 1px solid $theme-border
+
+$tag-color ?= $theme-text
+$tag-background-color ?= $theme-bg-soft
+
+$timeline-fg-line ?= $theme-accent
+$timeline-bg-line ?= $theme-bg
+
+$post-navigation-fg ?= $theme-text-secondary
+
+$searchbox-bg-container ?= $theme-bg-soft
+$searchbox-border ?= $theme-accent-border
+$searchbox-bg-input ?= $theme-bg
+$searchbox-bg-close-hover ?= $theme-bg-elevated
+$searchbox-bg-close-active ?= lighten($theme-bg-elevated, 10%)
+$searchbox-bg-result-item-hover ?= $theme-accent-soft
+
+// ---------- 导入 Icarus 核心样式 ----------
+@import 'style'
+
+// ============================================================
+// 全局与基础
+// ============================================================
+body
+  background: $theme-bg
+  color: $theme-text
+  font-family: $family-sans-serif
+  line-height: 1.8
+
+::selection
+  color: $theme-text
+  background: $theme-selection-bg
+
+// 滚动条
+::-webkit-scrollbar
+  width: 8px
+  height: 8px
+::-webkit-scrollbar-track
+  background: transparent
+::-webkit-scrollbar-thumb
+  background: $theme-border
+  border-radius: 4px
+  transition: background $t-base $ease
+  &:hover
+    background: $theme-accent-border
+
+// ============================================================
+// 链接
+// ============================================================
+a
+  color: $theme-accent
+  transition: color $t-fast $ease
+  &:hover
+    color: $theme-accent-hover
+
+// ============================================================
+// 通用卡片 hover
+// ============================================================
+.card
+  background: $theme-bg-elevated
+  border: 1px solid $theme-border
+  border-radius: $radius
+  box-shadow: $shadow-small
+  transition: border-color $t-base $ease, box-shadow $t-base $ease, transform $t-base $ease
+  &:hover
+    border-color: $theme-accent-border
+    box-shadow: $shadow-medium
+    transform: translateY(-2px)
+
+.card-content
+  background: transparent
+  color: $theme-text
+
+// ============================================================
+// 侧边栏 “最新文章” 等 widget 卡片
+// 让它们和普通卡片一样有 hover 效果
+// ============================================================
+.widget.card
+  transition: border-color $t-base $ease, box-shadow $t-base $ease, transform $t-base $ease
+  &:hover
+    border-color: $theme-accent-border
+    box-shadow: $shadow-medium
+    transform: translateY(-2px)
+
+// 侧边栏菜单项：hover 时文字变主题色，并轻微右移
+.widget .menu-list a
+  color: $theme-text-secondary
+  border-radius: $radius-small
+  transition: background $t-base $ease, color $t-fast $ease, padding-left $t-base $ease
+  &:hover
+    background: $theme-accent-soft
+    color: $theme-accent
+    padding-left: 0.75em
+
+// 侧边栏标题
+.widget .menu-label
+  color: $theme-text-muted
+  letter-spacing: 0.05em
+
+// ============================================================
+// 文章
+// ============================================================
+article.article, article.media
+  .title
+    color: $theme-text-strong
+    a
+      color: $theme-text-strong
+      // 下划线从左到右出现
+      background-image: linear-gradient(transparent calc(100% - 2px), $theme-accent 2px)
+      background-repeat: no-repeat
+      background-position: left bottom
+      background-size: 0 100%
+      transition: background-size $t-base $ease, color $t-fast $ease
+      &:hover
+        color: $theme-accent-hover
+        background-size: 100% 100%
+
+.article-more
+  color: $theme-accent
+  border: 1px solid $theme-accent-border
+  border-radius: $radius-small
+  background: transparent
+  transition: background $t-base $ease, color $t-fast $ease, border-color $t-base $ease
+  &:hover
+    background: $theme-accent
+    color: $theme-text-inverse
+    border-color: $theme-accent
+
+.article-licensing
+  background: $theme-bg-soft
+  border-left: 3px solid $theme-accent
+  color: $theme-text-secondary
+  border-radius: 0 $radius-small $radius-small 0
+
+// 引用
+.content blockquote
+  background: $theme-accent-soft
+  border-left: 4px solid $theme-accent
+  border-radius: 0 $radius-small $radius-small 0
+  color: $theme-text-secondary
+  padding: 1rem 1.5rem
+  margin: 1.5rem 0
+
+// 行内代码
+.content code:not(.hljs)
+  background: $theme-code-bg
+  color: $theme-code-text
+  border-radius: $radius-small
+  padding: 0.2em 0.4em
+  font-family: $family-code
+  font-size: 0.9em
+
+// 代码块
+.content pre
+  background: $theme-code-bg
+  border-radius: $radius
+  border: 1px solid $theme-border
+  code
+    font-family: $family-code
+    color: $theme-code-text
+
+// ============================================================
+// 导航栏
+// 下划线：从左侧开始，从左到右展开
+// ============================================================
+.navbar-main
+  background: $theme-bg-nav
+  border-bottom: 1px solid $theme-border
+  box-shadow: none
+
+  .navbar-item
+    color: $theme-text-secondary
+    transition: color $t-fast $ease, background-color $t-fast $ease
+    position: relative
+    &:after
+      content: ''
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 0
+      height: 2px
+      background: $theme-accent
+      transition: width $t-base $ease
+    &:hover, &.is-active
+      color: $theme-accent
+      background: transparent !important
+      &:after
+        width: 100%
+
+// ============================================================
+// 页脚
+// ============================================================
+.footer
+  background: $theme-bg-nav
+  color: $theme-text-secondary
+  border-top: 1px solid $theme-border
+
+// ============================================================
+// 分页
+// ============================================================
+.pagination-previous, .pagination-next, .pagination-link
+  background: transparent
+  color: $theme-text-secondary
+  border: 1px solid $theme-border
+  border-radius: $radius-small
+  transition: background $t-base $ease, color $t-fast $ease, border-color $t-base $ease
+  &:hover
+    background: $theme-accent-soft
+    color: $theme-accent
+    border-color: $theme-accent-border
+  &.is-current
+    background: $theme-accent
+    color: $theme-text-inverse
+    border-color: $theme-accent
+
+// ============================================================
+// 通用菜单（非 widget）
+// ============================================================
+.menu-list a
+  color: $theme-text-secondary
+  border-radius: $radius-small
+  transition: background $t-base $ease, color $t-fast $ease
+  &:hover
+    background: $theme-accent-soft
+    color: $theme-accent
+
+// ============================================================
+// 标签
+// ============================================================
+.tag
+  background: $theme-bg-soft
+  color: $theme-text-secondary
+  border-radius: $radius-small
+
+// ============================================================
+// 搜索框
+// ============================================================
+.searchbox .searchbox-container
+  background: $theme-bg-soft
+  border: 1px solid $theme-accent-border
+  border-radius: $radius
+  box-shadow: $shadow-medium
+  .searchbox-body
+    border-bottom: 1px solid $theme-border
+  .searchbox-result-item
+    transition: background $t-base $ease
+    &:hover
+      background: $theme-accent-soft
+    em
+      color: $theme-text-strong
+      background: $theme-accent-soft
+      font-style: normal
+      padding: 0 0.2em
+      border-radius: 2px
+
+// ============================================================
+// 返回顶部
+// ============================================================
+#back-to-top
+  background: $theme-bg-elevated
+  color: $theme-accent
+  border: 1px solid $theme-border
+  border-radius: $radius-small
+  box-shadow: $shadow-small
+  transition: background $t-base $ease, color $t-fast $ease, transform $t-base $ease
+  &:hover
+    background: $theme-accent-soft
+    color: $theme-accent-hover
+    transform: translateY(-2px)
+
+// ============================================================
+// 按钮
+// ============================================================
+.button
+  border-radius: $radius-small
+  transition: background $t-base $ease, color $t-fast $ease, border-color $t-base $ease, transform $t-base $ease
+  &.is-primary
+    background: $theme-accent
+    color: $theme-text-inverse
+    border-color: $theme-accent
+    &:hover
+      background: $theme-accent-hover
+      border-color: $theme-accent-hover
+  &.is-outlined
+    background: transparent
+    color: $theme-accent
+    border-color: $theme-accent-border
+    &:hover
+      background: $theme-accent-soft
+      border-color: $theme-accent
+
+// ============================================================
+// 时间线
+// ============================================================
+.timeline
+  .media
+    &:before
+      background: $theme-accent
+      border: 2px solid $theme-bg
+      box-shadow: 0 0 0 1px $theme-accent-border
+      transition: background $t-base $ease
+    &:hover:before
+      background: $theme-accent-hover
+
+// ============================================================
+// 输入框
+// ============================================================
+.input, .textarea
+  background: $theme-bg-soft
+  color: $theme-text
+  border-color: $theme-border
+  border-radius: $radius-small
+  transition: border-color $t-base $ease, box-shadow $t-base $ease
+  &:hover
+    border-color: $theme-accent-border
+  &:focus
+    border-color: $theme-accent
+    box-shadow: 0 0 0 2px $theme-focus-ring
+
+// 卡片标题
+.card-header-title
+  color: $theme-text-strong
+
+// 文章元信息
+.article-meta
+  color: $theme-text-muted
+
+// 标签云
+.tagcloud
+  a
+    color: $theme-text-secondary
+    transition: color $t-fast $ease
+    &:hover
+      color: $theme-accent
+
+// ============================================================
+// 头像变圆
+// ============================================================
+.profile-avatar,
+.widget .avatar,
+.card .avatar,
+.avatar
+  border-radius: 50% !important
+  overflow: hidden
+  border: 2px solid $theme-border
+  transition: border-color $t-base $ease, transform $t-base $ease
+  &:hover
+    border-color: $theme-accent
+    transform: scale(1.03)
+
+.profile-avatar img,
+.widget .avatar img,
+.card .avatar img,
+.avatar img
+  border-radius: 50% !important
+  display: block
+  width: 100%
+  height: 100%
+  object-fit: cover
+
+img.avatar
+  border-radius: 50% !important
+  object-fit: cover
+  border: 2px solid $theme-border
+  transition: border-color $t-base $ease, transform $t-base $ease
+  &:hover
+    border-color: $theme-accent
+    transform: scale(1.03)
