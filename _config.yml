@@ -5,7 +5,7 @@ keywords: null
 author: Phasma
 language: zh-CN
 timezone: Asia/Shanghai
-url: https://phasmahunt.github.io/
+url: https://phasmahunt.github.io
 permalink: ':year/:month/:day/:title/'
 permalink_defaults: null
 pretty_urls:
