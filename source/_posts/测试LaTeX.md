@@ -5,70 +5,54 @@ date: 2026-09-15 00:40
 updated: 2026-09-15 00:40
 title: 测试LaTeX
 ---
-# LaTeX 渲染测试（移动端安全版）
+# Stolz 定理及其证明
 
-**定理**：设 $A \in \mathbb{R}^{n \times n}$，且 $A^T = A$。若 $\lambda \in \mathbb{C}$ 是 $A$ 的一个特征值，则 $\lambda \in \mathbb{R}$。
+**定理（Stolz 定理，$\frac{*}{\infty}$ 型）**：
+设数列 $\{y_n\}$ 严格单调递增，且 $\lim_{n \to \infty} y_n = +\infty$。
+如果极限 $\lim_{n \to \infty} \frac{x_{n+1} - x_n}{y_{n+1} - y_n} = L$（其中 $L$ 为有限实数），
+则数列 $\{x_n\}$ 满足：
+$$ \lim_{n \to \infty} \frac{x_n}{y_n} = L $$
 
 **证明**：
 
-设 $v \in \mathbb{C}^n \setminus \{0\}$ 是 $A$ 对应于 $\lambda$ 的特征向量，即
-$$ A v = \lambda v, \quad v \neq 0 $$
+已知 $\lim_{n \to \infty} \frac{x_{n+1} - x_n}{y_{n+1} - y_n} = L$。
+根据数列极限的定义，对任意给定的 $\varepsilon > 0$，存在正整数 $N_1$，使得当 $n > N_1$ 时，有：
+$$ \left| \frac{x_{n+1} - x_n}{y_{n+1} - y_n} - L \right| < \varepsilon $$
 
-在 $\mathbb{C}^n$ 上取标准内积：
-$$ \langle x, y \rangle := \sum_{i=1}^{n} x_i \overline{y_i} = \overline{y}^T x, \quad x, y \in \mathbb{C}^n $$
+因为 $\{y_n\}$ 严格单调递增，所以 $y_{n+1} - y_n > 0$。于是上式可以展开为：
+$$ (L - \varepsilon)(y_{n+1} - y_n) < x_{n+1} - x_n < (L + \varepsilon)(y_{n+1} - y_n) $$
 
-由 $A v = \lambda v$，有：
-$$ \lambda \langle v, v \rangle = \langle \lambda v, v \rangle = \langle A v, v \rangle = v^* A v $$
+取定一个 $N > N_1$。对于任意 $n > N$，我们将 $x_n - x_N$ 写成差分和的形式：
+$$ x_n - x_N = \sum_{k=N}^{n-1} (x_{k+1} - x_k) $$
 
-另一方面，因为 $A$ 是实对称矩阵，所以：
-$$ \overline{v^* A v} = (v^* A v)^* = v^* A^* v = v^* A^T v = v^* A v $$
+利用前面的不等式对每一项进行放缩，得到：
+$$ (L - \varepsilon) \sum_{k=N}^{n-1} (y_{k+1} - y_k) < x_n - x_N < (L + \varepsilon) \sum_{k=N}^{n-1} (y_{k+1} - y_k) $$
 
-其中 $A^* = \overline{A}^T = A^T = A$。因此 $v^* A v \in \mathbb{R}$。又：
-$$ \langle v, v \rangle = \sum_{i=1}^{n} |v_i|^2 > 0 $$
+中间的求和式是一个 telescoping sum（裂项相消），可以直接算出：
+$$ \sum_{k=N}^{n-1} (y_{k+1} - y_k) = y_n - y_N $$
 
-故：
-$$ \lambda = \frac{v^* A v}{\langle v, v \rangle} \in \mathbb{R} $$
+因此，不等式化简为：
+$$ (L - \varepsilon)(y_n - y_N) < x_n - x_N < (L + \varepsilon)(y_n - y_N) $$
 
-所以 $A$ 的特征值均为实数。 $\square$
+将 $x_N$ 移项，得到 $x_n$ 的上下界：
+$$ x_N + (L - \varepsilon)(y_n - y_N) < x_n < x_N + (L + \varepsilon)(y_n - y_N) $$
 
----
+因为 $y_n \to +\infty$，所以当 $n$ 足够大时，$y_n > 0$。不等式两边同时除以 $y_n$：
+$$ \frac{x_N}{y_n} + (L - \varepsilon)\left(1 - \frac{y_N}{y_n}\right) < \frac{x_n}{y_n} < \frac{x_N}{y_n} + (L + \varepsilon)\left(1 - \frac{y_N}{y_n}\right) $$
 
-## 附加语法测试
+将常数项与 $n$ 相关的项分离：
+$$ L - \varepsilon + \frac{x_N - (L - \varepsilon)y_N}{y_n} < \frac{x_n}{y_n} < L + \varepsilon + \frac{x_N - (L + \varepsilon)y_N}{y_n} $$
 
-行内公式：$\alpha, \beta, \Gamma, \Delta, \theta, \lambda, \mu, \pi, \sigma, \phi, \omega$。
+注意，$x_N$、$y_N$、$L$、$\varepsilon$ 都是固定常数。因为 $y_n \to +\infty$，所以有：
+$$ \lim_{n \to \infty} \frac{x_N - (L - \varepsilon)y_N}{y_n} = 0 $$
+$$ \lim_{n \to \infty} \frac{x_N - (L + \varepsilon)y_N}{y_n} = 0 $$
 
-行内测试：$a \le b \iff b \ge a$， $x \to 0^+$， $\forall x \in \mathbb{R} \ \exists n \in \mathbb{N}$。
+因此，存在正整数 $N_2 > N$，使得当 $n > N_2$ 时，这两个分式的绝对值均小于 $\varepsilon$。于是有：
+$$ L - 2\varepsilon < \frac{x_n}{y_n} < L + 2\varepsilon $$
 
-极限、积分、求和、连乘、组合数（拆成单独的块）：
-$$ \lim_{x \to 0} \frac{\sin x}{x} = 1 $$
-$$ \int_{-\infty}^{+\infty} e^{-x^2} \, dx = \sqrt{\pi} $$
-$$ \sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6} $$
-$$ \prod_{i=1}^{n} i = n! $$
-$$ \binom{n}{k} = \frac{n!}{k!(n-k)!} $$
+即：
+$$ \left| \frac{x_n}{y_n} - L \right| < 2\varepsilon $$
 
-多行对齐（移动端建议用独立行代替 aligned）：
-$$ f(x) = a_0 + a_1 x + a_2 x^2 + \cdots + a_n x^n $$
-$$ f'(x) = \sum_{k=1}^{n} k a_k x^{k-1} $$
-
-分段函数（移动端经常崩溃，改用简单写法）：
-若 $x > 0$，则 $\operatorname{sgn}(x) = 1$；若 $x = 0$，则 $\operatorname{sgn}(x) = 0$；若 $x < 0$，则 $\operatorname{sgn}(x) = -1$。
-
-矩阵（移动端安全写法，换行必须用 \\）：
-$$ A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} $$
-$$ \det B = \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc $$
-
-括号、取整、集合（放弃 \Bigl，改用 \left）：
-$$ \left( \frac{a}{b} \right)^n = \frac{a^n}{b^n} $$
-$$ \left\{ x \in \mathbb{R} \mid |x| < 1 \right\} $$
-$$ \lfloor x \rfloor \le x < \lceil x \rceil $$
-
-花体、黑板粗体、期望、向量：
-$$ \mathcal{F}(x) = \int_{-\infty}^{x} f(t) \, dt $$
-$$ \mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) \Pr(\omega) $$
-$$ \vec{v} = \begin{pmatrix} v_1 \\ v_2 \\ v_3 \end{pmatrix} $$
-$$ \dot{x} = \frac{dx}{dt}, \quad \ddot{x} = \frac{d^2 x}{dt^2} $$
-$$ \nabla f = \left( \frac{\partial f}{\partial x_1}, \ldots, \frac{\partial f}{\partial x_n} \right) $$
-
-极限与逻辑量词：
-$$ \lim_{n \to \infty} \left( 1 + \frac{1}{n} \right)^n = e $$
-$$ \forall \varepsilon > 0, \ \exists \delta > 0: \ |x - a| < \delta \implies |f(x) - f(a)| < \varepsilon $$
+由极限的定义可知：
+$$ \lim_{n \to \infty} \frac{x_n}{y_n} = L $$
+证毕。 $\square$
