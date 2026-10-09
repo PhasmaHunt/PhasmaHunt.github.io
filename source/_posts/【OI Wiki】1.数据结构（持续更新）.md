@@ -81,4 +81,4 @@ void deleten(node *p)
 # 3. 哈希表
 
 ### 实现
-111
+11
