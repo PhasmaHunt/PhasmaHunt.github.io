@@ -261,24 +261,24 @@ article.article, article.media
   padding: 1rem 1.5rem
   margin: 1.5rem 0
 
+// 1. 最外层容器
 figure.highlight
   background-color: $theme-code-bg !important
-  border: 1px solid $theme-border !important // 如果不要外边框，改成 border: none !important
+  border: 1px solid $theme-border !important // 如果需要外边框保留这行，不要则改成 border: none !important
   border-radius: $radius !important
   margin: 1.5rem 0 !important
   padding: 0 !important
   overflow: hidden !important
 
-// 2. 顶部标题栏（包含折叠/复制按钮）与行号列：强制深色背景，消除浅色块
+// 2. 顶部标题栏（折叠/复制按钮区）与行号列：统一深色背景，消除浅色块
 figure.highlight figcaption,
 figure.highlight .gutter
   background-color: $theme-code-bg !important
-  border: none !important
   color: $theme-text-muted !important
 
-// 3. 顶部标题栏细节调整
+// 3. 顶部标题栏细节
 figure.highlight figcaption
-  border-bottom: 1px solid $theme-border !important // 加一条极细的底边线作为层次区分（可选，不要可删）
+  border-bottom: 1px solid $theme-border !important // 标题栏和代码区之间加一条细线作区分
   padding: 0.5rem 1rem !important
 
 // 4. 代码主体区域：背景统一，去掉一切内部边框和阴影
@@ -293,16 +293,16 @@ figure.highlight code
   border: none !important
   box-shadow: none !important
 
-// 5. 行号列（左侧）细节：去掉分割线，设置颜色和内边距
+// 5. 行号列（左侧）——核心改动：加一条竖向分隔线
 figure.highlight td.gutter
-  border-right: none !important // 关键：去掉中间那条视觉分割线
+  border-right: 1px solid $theme-border !important // 这里就是你要的竖线，颜色可以用 $theme-border 或 $theme-accent-border
   padding-right: 1rem !important
   padding-left: 1rem !important
   user-select: none
 
-// 6. 代码列（右侧）细节：调整内边距，避免出现缝隙
+// 6. 代码列（右侧）：调整左内边距，避免代码紧贴竖线
 figure.highlight td.code
-  padding-left: 0 !important
+  padding-left: 1rem !important
   padding-right: 1rem !important
 
 // 7. 代码行高和字体
