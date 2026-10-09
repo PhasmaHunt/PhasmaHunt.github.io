@@ -2,6 +2,7 @@
 // Personal Dark Minimal Theme for Icarus
 // 字体：Helvetica / Consolas / Microsoft YaHei
 // 主题色：#6C9BFF
+// 代码高亮：tokyo-night-dark
 // ============================================================
 
 // ---------- 基础色板 ----------
@@ -22,12 +23,13 @@ $theme-accent ?= #6C9BFF
 $theme-accent-hover ?= #8AB0FF
 $theme-accent-active ?= #4F82E6
 $theme-accent-soft ?= rgba(108, 155, 255, 0.12)
+$theme-accent-overlay ?= rgba(108, 155, 255, 0.10)
 $theme-accent-border ?= rgba(108, 155, 255, 0.35)
 $theme-focus-ring ?= rgba(108, 155, 255, 0.45)
 $theme-selection-bg ?= rgba(108, 155, 255, 0.30)
 
-$theme-code-bg ?= #0E1013
-$theme-code-text ?= #D6E2FF
+$theme-code-bg ?= #1a1b26
+$theme-code-text ?= #c0caf5
 
 // ---------- 动效时长 ----------
 $t-fast ?= 0.12s
@@ -58,10 +60,10 @@ $black-bis ?= $theme-text-secondary
 
 $orange ?= $theme-accent
 $yellow ?= $theme-accent
-$green ?= #4AE58C
+$green ?= #9ece6a
 $blue ?= $theme-accent
-$purple ?= #BD8FE8
-$red ?= #FF5A76
+$purple ?= #bb9af7
+$red ?= #f7768e
 
 $primary ?= $theme-accent
 $info ?= $theme-accent
@@ -141,7 +143,6 @@ body
   color: $theme-text
   background: $theme-selection-bg
 
-// 滚动条
 ::-webkit-scrollbar
   width: 8px
   height: 8px
@@ -164,7 +165,7 @@ a
     color: $theme-accent-hover
 
 // ============================================================
-// 通用卡片 hover
+// 通用卡片
 // ============================================================
 .card
   background: $theme-bg-elevated
@@ -183,16 +184,28 @@ a
 
 // ============================================================
 // 侧边栏 “最新文章” 等 widget 卡片
-// 让它们和普通卡片一样有 hover 效果
+// hover 时覆盖一层淡蓝色，仿照链接的视觉语言
 // ============================================================
 .widget.card
+  position: relative
   transition: border-color $t-base $ease, box-shadow $t-base $ease, transform $t-base $ease
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    background: $theme-accent-overlay
+    opacity: 0
+    transition: opacity $t-base $ease
+    pointer-events: none
+    border-radius: inherit
   &:hover
     border-color: $theme-accent-border
     box-shadow: $shadow-medium
     transform: translateY(-2px)
+    &::after
+      opacity: 1
 
-// 侧边栏菜单项：hover 时文字变主题色，并轻微右移
+// 侧边栏菜单项
 .widget .menu-list a
   color: $theme-text-secondary
   border-radius: $radius-small
@@ -202,7 +215,6 @@ a
     color: $theme-accent
     padding-left: 0.75em
 
-// 侧边栏标题
 .widget .menu-label
   color: $theme-text-muted
   letter-spacing: 0.05em
@@ -215,7 +227,6 @@ article.article, article.media
     color: $theme-text-strong
     a
       color: $theme-text-strong
-      // 下划线从左到右出现
       background-image: linear-gradient(transparent calc(100% - 2px), $theme-accent 2px)
       background-repeat: no-repeat
       background-position: left bottom
@@ -242,7 +253,6 @@ article.article, article.media
   color: $theme-text-secondary
   border-radius: 0 $radius-small $radius-small 0
 
-// 引用
 .content blockquote
   background: $theme-accent-soft
   border-left: 4px solid $theme-accent
@@ -251,27 +261,57 @@ article.article, article.media
   padding: 1rem 1.5rem
   margin: 1.5rem 0
 
-// 行内代码
-.content code:not(.hljs)
-  background: $theme-code-bg
-  color: $theme-code-text
-  border-radius: $radius-small
-  padding: 0.2em 0.4em
-  font-family: $family-code
-  font-size: 0.9em
+figure.highlight
+  background-color: $theme-code-bg !important
+  border: 1px solid $theme-border !important // 如果不要外边框，改成 border: none !important
+  border-radius: $radius !important
+  margin: 1.5rem 0 !important
+  padding: 0 !important
+  overflow: hidden !important
 
-// 代码块
-.content pre
-  background: $theme-code-bg
-  border-radius: $radius
-  border: 1px solid $theme-border
-  code
-    font-family: $family-code
-    color: $theme-code-text
+// 2. 顶部标题栏（包含折叠/复制按钮）与行号列：强制深色背景，消除浅色块
+figure.highlight figcaption,
+figure.highlight .gutter
+  background-color: $theme-code-bg !important
+  border: none !important
+  color: $theme-text-muted !important
 
+// 3. 顶部标题栏细节调整
+figure.highlight figcaption
+  border-bottom: 1px solid $theme-border !important // 加一条极细的底边线作为层次区分（可选，不要可删）
+  padding: 0.5rem 1rem !important
+
+// 4. 代码主体区域：背景统一，去掉一切内部边框和阴影
+figure.highlight .highlight-body,
+figure.highlight table,
+figure.highlight tbody,
+figure.highlight tr,
+figure.highlight td,
+figure.highlight pre,
+figure.highlight code
+  background-color: $theme-code-bg !important
+  border: none !important
+  box-shadow: none !important
+
+// 5. 行号列（左侧）细节：去掉分割线，设置颜色和内边距
+figure.highlight td.gutter
+  border-right: none !important // 关键：去掉中间那条视觉分割线
+  padding-right: 1rem !important
+  padding-left: 1rem !important
+  user-select: none
+
+// 6. 代码列（右侧）细节：调整内边距，避免出现缝隙
+figure.highlight td.code
+  padding-left: 0 !important
+  padding-right: 1rem !important
+
+// 7. 代码行高和字体
+figure.highlight pre,
+figure.highlight .line
+  line-height: 1.6rem !important
+  font-family: $family-code !important
 // ============================================================
 // 导航栏
-// 下划线：从左侧开始，从左到右展开
 // ============================================================
 .navbar-main
   background: $theme-bg-nav
@@ -324,7 +364,7 @@ article.article, article.media
     border-color: $theme-accent
 
 // ============================================================
-// 通用菜单（非 widget）
+// 通用菜单
 // ============================================================
 .menu-list a
   color: $theme-text-secondary
@@ -427,15 +467,12 @@ article.article, article.media
     border-color: $theme-accent
     box-shadow: 0 0 0 2px $theme-focus-ring
 
-// 卡片标题
 .card-header-title
   color: $theme-text-strong
 
-// 文章元信息
 .article-meta
   color: $theme-text-muted
 
-// 标签云
 .tagcloud
   a
     color: $theme-text-secondary

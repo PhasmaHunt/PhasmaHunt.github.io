@@ -63,3 +63,12 @@ deploy:
   type: git
   repository: git@github.com:PhasmaHunt/PhasmaHunt.github.io.git
   branch: main
+markdown:
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: true
+    linkify: true
+    typographer: true
+  plugins:
+    - '@renbaoshuo/markdown-it-katex'
