@@ -76,9 +76,9 @@ $$ B = \begin{pmatrix} b_{11} & b_{12} & \cdots & b_{1m} \\\\ b_{21} & b_{22} & 
 根据行列式定义，$m \times m$ 矩阵 $AB$ 的行列式可展开为：
 $$ \det(AB) = \sum_{\sigma \in S_m} \operatorname{sgn}(\sigma) \prod_{i=1}^{m} (AB)_{i, \sigma(i)} $$
 
-其中 $S_m$ 是所有 $m$ 阶排列的集合，$(AB)_{i, \sigma(i)}$ 是矩阵 $AB$ 的第 $i$ 行第 $\sigma(i)$ 列的元素。
+其中 $S_m$ 是所有 $m$ 阶排列的集合，$(AB) _{i, \sigma(i)}$ 是矩阵 $AB$ 的第 $i$ 行第 $\sigma(i)$ 列的元素。
 由矩阵乘法定义可知：
-$$ (AB)_{i, \sigma(i)} = \sum_{k=1}^{n} a_{i,k} b_{k, \sigma(i)} $$
+$$ (AB) _{i, \sigma(i)} = \sum_{k=1}^{n} a_{i,k} b_{k, \sigma(i)} $$
 
 代入行列式的展开式中，得到：
 $$ \det(AB) = \sum_{\sigma \in S_m} \operatorname{sgn}(\sigma) \prod_{i=1}^{m} \left( \sum_{k_i=1}^{n} a_{i, k_i} b_{k_i, \sigma(i)} \right) $$
