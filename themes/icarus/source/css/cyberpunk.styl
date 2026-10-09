@@ -251,6 +251,10 @@ article.article, article.media
   padding: 1rem 1.5rem
   margin: 1.5rem 0
 
+// ============================================================
+// 代码块 — 适配 tokyo-night-dark 并修复浅色环绕线
+// ============================================================
+
 // 行内代码
 .content code:not(.hljs)
   background: $theme-code-bg
@@ -260,15 +264,49 @@ article.article, article.media
   font-family: $family-code
   font-size: 0.9em
 
-// 代码块
-.content pre
-  background: $theme-code-bg
-  border-radius: $radius
-  border: 1px solid $theme-border
-  code
-    font-family: $family-code
-    color: $theme-code-text
+// 1. 清除所有内部元素的边框和背景，统一颜色
+.content pre,
+.content code,
+figure.highlight,
+figure.highlight table,
+figure.highlight tr,
+figure.highlight td,
+.hljs,
+.hljs-ln,
+.hljs-ln-numbers,
+.hljs-ln-code
+  background-color: $theme-code-bg !important
+  border: none !important
+  box-shadow: none !important
 
+// 2. 只在最外层容器上保留边框和圆角
+figure.highlight,
+.content pre
+  border: 1px solid $theme-border !important
+  border-radius: $radius !important
+  margin: 1.5rem 0 !important
+  padding: 1rem !important
+  overflow: hidden !important
+
+// 3. 去除行号列（左侧）的分割线
+figure.highlight td.gutter,
+.hljs-ln-numbers
+  border-right: none !important // 关键：去掉中间的分割线
+  padding-right: 1rem !important
+  color: $theme-text-muted !important
+  user-select: none
+
+// 4. 代码列（右侧）调整内边距，避免出现浅色缝隙
+figure.highlight td.code,
+.hljs-ln-code
+  padding-left: 0 !important
+
+// 5. 确保内部的 pre 不会自己产生边框或外边距
+figure.highlight pre,
+.content pre
+  margin: 0 !important
+  padding: 0 !important
+  border: none !important
 // ============================================================
 // 导航栏
 // 下划线：从左侧开始，从左到右展开
