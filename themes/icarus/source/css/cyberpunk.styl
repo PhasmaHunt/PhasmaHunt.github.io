@@ -261,49 +261,55 @@ article.article, article.media
   padding: 1rem 1.5rem
   margin: 1.5rem 0
 
-// ============================================================
-// 代码块 — 适配 tokyo-night-dark
-// ============================================================
-.content code:not(.hljs)
-  background: $theme-code-bg
-  color: $theme-code-text
-  border-radius: $radius-small
-  padding: 0.2em 0.4em
-  font-family: $family-code
-  font-size: 0.9em
+figure.highlight
+  background-color: $theme-code-bg !important
+  border: 1px solid $theme-border !important // 如果不要外边框，改成 border: none !important
+  border-radius: $radius !important
+  margin: 1.5rem 0 !important
+  padding: 0 !important
+  overflow: hidden !important
 
-.content pre
-  background: $theme-code-bg
-  border-radius: $radius
-  border: 1px solid $theme-border
+// 2. 顶部标题栏（包含折叠/复制按钮）与行号列：强制深色背景，消除浅色块
+figure.highlight figcaption,
+figure.highlight .gutter
+  background-color: $theme-code-bg !important
+  border: none !important
+  color: $theme-text-muted !important
 
-.content pre code
-  font-family: $family-code
-  color: $theme-code-text
+// 3. 顶部标题栏细节调整
+figure.highlight figcaption
+  border-bottom: 1px solid $theme-border !important // 加一条极细的底边线作为层次区分（可选，不要可删）
+  padding: 0.5rem 1rem !important
 
-// 覆盖 highlight.js 主题背景，与页面深色背景衔接
-.hljs
-  background: $theme-code-bg !important
-  color: $theme-code-text !important
+// 4. 代码主体区域：背景统一，去掉一切内部边框和阴影
+figure.highlight .highlight-body,
+figure.highlight table,
+figure.highlight tbody,
+figure.highlight tr,
+figure.highlight td,
+figure.highlight pre,
+figure.highlight code
+  background-color: $theme-code-bg !important
+  border: none !important
+  box-shadow: none !important
 
-// 可选：微调 tokyo-night-dark 的注释与关键字，使其更贴合你的主题色
-.hljs-comment,
-.hljs-quote
-  color: #565f89 !important
-  font-style: italic
+// 5. 行号列（左侧）细节：去掉分割线，设置颜色和内边距
+figure.highlight td.gutter
+  border-right: none !important // 关键：去掉中间那条视觉分割线
+  padding-right: 1rem !important
+  padding-left: 1rem !important
+  user-select: none
 
-.hljs-keyword,
-.hljs-selector-tag
-  color: #bb9af7 !important
+// 6. 代码列（右侧）细节：调整内边距，避免出现缝隙
+figure.highlight td.code
+  padding-left: 0 !important
+  padding-right: 1rem !important
 
-.hljs-string,
-.hljs-attr
-  color: #9ece6a !important
-
-.hljs-title,
-.hljs-function
-  color: #7aa2f7 !important
-
+// 7. 代码行高和字体
+figure.highlight pre,
+figure.highlight .line
+  line-height: 1.6rem !important
+  font-family: $family-code !important
 // ============================================================
 // 导航栏
 // ============================================================
