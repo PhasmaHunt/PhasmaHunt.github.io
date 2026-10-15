@@ -1,4 +1,5 @@
 [
-  "image-upload-toolkit",
-  "git-vault-sync"
+  "git-vault-sync",
+  "templater-obsidian",
+  "image-upload-toolkit"
 ]

@@ -1,0 +1,152 @@
+/* =============================================
+   Tokyo Night for Obsidian Code Blocks
+   针对 C++ 优化 + 修复全蓝问题 + 自定义字体大小
+   ============================================= */
+
+body {
+    /* 颜色变量 */
+    --tn-bg: #181a24;
+    --tn-fg: #9aa5ce;
+    --tn-comment: #565f89;
+    --tn-keyword: #bb9af7;
+    --tn-function: #e0af68;   /* 函数统一为橙黄 */
+    --tn-variable: #7dcfff;   /* 变量为蓝色 */
+    --tn-type: #2ac3a8;       /* 类型/类为青色 */
+    --tn-string: #9ece6a;
+    --tn-number: #ff9e64;
+    --tn-operator: #c0caf5;   /* 运算符 */
+    --tn-punctuation: #c0caf5;/* 标点符号，统一灰色 */
+    --tn-line-highlight: #1f233380;
+
+    /* 字体大小配置 */
+    --tn-code-font-size: 15px;
+}
+
+/* --- 1. 代码块基础样式 --- */
+.markdown-rendered pre,
+.cm-s-obsidian div.HyperMD-codeblock,
+.cm-s-obsidian pre.HyperMD-codeblock {
+    background-color: var(--tn-bg) !important;
+    color: var(--tn-fg) !important;
+    font-size: var(--tn-code-font-size) !important; /* 应用字体大小 */
+}
+
+/* 行内代码也应用字体大小 */
+.markdown-rendered code:not(pre code),
+.cm-s-obsidian span.cm-inline-code {
+    background-color: var(--tn-bg);
+    color: var(--tn-variable);
+    border: 1px solid #2f334d;
+    font-size: var(--tn-code-font-size) !important;
+}
+
+/* 当前行高亮 */
+.cm-s-obsidian .cm-line.HyperMD-codeblock.cm-active {
+    background-color: var(--tn-line-highlight) !important;
+}
+
+/* --- 2. 阅读模式语法高亮 (Prism.js) --- */
+
+/* 注释 */
+.markdown-rendered pre .token.comment,
+.markdown-rendered pre .token.prolog,
+.markdown-rendered pre .token.doctype,
+.markdown-rendered pre .token.cdata {
+    color: var(--tn-comment) !important;
+    font-style: normal !important;
+}
+
+/* 关键字 */
+.markdown-rendered pre .token.keyword {
+    color: var(--tn-keyword) !important;
+}
+
+/* 类型 / 类 (修复 vector 等变蓝的问题) */
+.markdown-rendered pre .token.class-name,
+.markdown-rendered pre .token.builtin,
+.markdown-rendered pre .token.type {
+    color: var(--tn-type) !important;
+    font-weight: normal !important;
+}
+
+/* 函数 / 方法 (修复 push_back 变蓝的问题) */
+.markdown-rendered pre .token.function,
+.markdown-rendered pre .token.method {
+    color: var(--tn-function) !important;
+}
+
+/* 变量 (a, b, n 等保持蓝色) */
+.markdown-rendered pre .token.variable,
+.markdown-rendered pre .token.constant {
+    color: var(--tn-variable) !important;
+}
+
+/* 字符串 */
+.markdown-rendered pre .token.string,
+.markdown-rendered pre .token.char {
+    color: var(--tn-string) !important;
+}
+
+/* 数字 */
+.markdown-rendered pre .token.number,
+.markdown-rendered pre .token.boolean {
+    color: var(--tn-number) !important;
+}
+
+/* 运算符和标点符号 (统一括号、尖括号、分号颜色) */
+.markdown-rendered pre .token.operator,
+.markdown-rendered pre .token.punctuation {
+    color: var(--tn-punctuation) !important;
+}
+
+/* --- 3. 编辑模式语法高亮 (CodeMirror 6) --- */
+
+/* 注释 */
+.cm-s-obsidian span.cm-comment {
+    color: var(--tn-comment) !important;
+    font-style: normal !important;
+}
+
+/* 关键字 */
+.cm-s-obsidian span.cm-keyword,
+.cm-s-obsidian span.cm-operator {
+    color: var(--tn-keyword) !important;
+}
+
+/* 类型 (CodeMirror 中的类型) */
+.cm-s-obsidian span.cm-type,
+.cm-s-obsidian span.cm-atom {
+    color: var(--tn-type) !important;
+}
+
+/* 函数 / 方法 */
+.cm-s-obsidian span.cm-def,
+.cm-s-obsidian span.cm-builtin,
+.cm-s-obsidian span.cm-function {
+    color: var(--tn-function) !important;
+}
+
+/* 变量 */
+.cm-s-obsidian span.cm-variable,
+.cm-s-obsidian span.cm-variable-2,
+.cm-s-obsidian span.cm-variable-3,
+.cm-s-obsidian span.cm-property {
+    color: var(--tn-variable) !important;
+}
+
+/* 字符串 */
+.cm-s-obsidian span.cm-string,
+.cm-s-obsidian span.cm-string-2 {
+    color: var(--tn-string) !important;
+}
+
+/* 数字 */
+.cm-s-obsidian span.cm-number {
+    color: var(--tn-number) !important;
+}
+
+/* 标点符号 (统一括号颜色) */
+.cm-s-obsidian span.cm-punctuation,
+.cm-s-obsidian span.cm-bracket {
+    color: var(--tn-punctuation) !important;
+}
