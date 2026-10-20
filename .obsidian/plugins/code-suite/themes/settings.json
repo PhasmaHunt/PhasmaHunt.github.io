@@ -1,0 +1,44 @@
+{
+  "name": "Tokyo Night Custom",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1a1b26",
+    "editor.foreground": "#a9b1d6"
+  },
+  "tokenColors": [
+    {
+      "scope": ["comment", "storage.modifier", "keyword.control.flow", "keyword.control.return"],
+      "settings": {
+        "fontStyle": ""
+      }
+    },
+    {
+      "scope": ["variable", "variable.other", "variable.other.readwrite", "variable.other.object"],
+      "settings": {
+        "foreground": "#7dcfff",
+        "fontStyle": ""
+      }
+    },
+    {
+      "scope": ["storage.type", "support.type", "keyword.type", "entity.name.type", "support.class"],
+      "settings": {
+        "foreground": "#2ac3a8",
+        "fontStyle": ""
+      }
+    },
+    {
+      "scope": ["punctuation", "keyword.operator", "meta.brace", "meta.delimiter"],
+      "settings": {
+        "foreground": "#c0caf5",
+        "fontStyle": ""
+      }
+    },
+    {
+      "scope": ["entity.name.function", "support.function", "variable.function", "entity.name.function.member"],
+      "settings": {
+        "foreground": "#e0af68",
+        "fontStyle": ""
+      }
+    }
+  ]
+}

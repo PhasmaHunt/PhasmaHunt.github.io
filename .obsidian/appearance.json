@@ -2,6 +2,6 @@
   "monospaceFontFamily": "Consolas",
   "cssTheme": "Tokyo Night",
   "enabledCssSnippets": [
-    "tokyo-night-dark"
+    "tokyo-night"
   ]
 }
