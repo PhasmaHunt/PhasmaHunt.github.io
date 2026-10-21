@@ -773,3 +773,268 @@ int main() {
 ![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "x\operatorname{opt} x=x")
 ### 实现
 
+**初始化：** 为了方便，我们将待操作数组 $arr$ 扩充到2的幂次的大小 $N$ ，开一个 $2N$ 大小的数组 $tree$ ，初始化 $lazy$ 数组便于后续应用懒标记的区间修改，递归求出每一段初始区间的区间和。
+
+```cpp
+struct seg {
+    vector<int> tree;
+    vector<int> lazy;
+    int N;
+    explicit seg(vector<int> arr) {
+        N = arr.size();
+        tree.resize(2 * N);
+        lazy.resize(2 * N);
+        fill(lazy.begin(), lazy.end(), 0);
+        for (int i = 0; i < N; ++i) {
+            tree[i + N] = arr[i];
+        }
+    }
+    
+    void build(int cur) {
+        if (cur < N) {
+            build(2 * cur);
+            build(2 * cur + 1);
+            tree[cur] = tree[2 * cur] + tree[2 * cur + 1];
+        }
+    }
+};
+```
+
+**懒标记：** 考虑到区间修改操作对 $tree$ 中节点改动较大，如果要修改区间波及的所有结点，复杂度显然过高。
+我们考虑只更新区间修改中对应的极大区间对应节点，运用懒标记指示该节点的后代节点还欠完成一个 $lazy[cur]$ 大小的更改，而对其后代的修改则推迟到后续对其查询或修改的时候再进行。
+我们定义一个 $push$ 函数表示在后续过程中需要将 $cur$ 节点的懒标记下推到子节点后对子节点的区间和加回欠的 $lazy[cur]$ 。
+
+```cpp
+void push(int cur, int l, int r) {
+    if (cur < N and lazy[cur] != 0) {
+        int amount = (r - l + 1) / 2 * lazy[cur];
+        tree[2 * cur] += amount;
+        tree[2 * cur + 1] += amount;
+        lazy[2 * cur] += lazy[cur];
+        lazy[2 * cur + 1] += lazy[cur];
+        lazy[cur] = 0;
+    }
+}
+```
+
+**区间修改：** 我们从1号节点开始向下递归查找所需要的极大子区间们，以此将所需修改的区间拆为若干个子区间的并。在向下递归的过程中，需要同时对路过的点进行 $push$ ，进而更新懒标记，最后当递归到的区间完全被需要修改的区间覆盖时，这就是我们要找的极大子区间，将他们的 $lazy$ 更新即可。
+
+```cpp
+void modify(int cur, int l, int r, int ql, int qr, int delta) {
+    if (ql <= l and qr >= r) {
+        lazy[cur] += delta;
+        tree[cur] += delta * (r - l + 1);
+    } else {
+        int mid = (r + l) / 2;
+        push(cur, l, r);
+        if (ql <= mid)
+            modify(2 * cur, l, mid, ql, qr, delta);
+        if (qr > mid)
+            modify(2 * cur + 1, mid + 1, r, ql, qr, delta);
+        tree[cur] = tree[2 * cur] + tree[2 * cur + 1];
+    }
+}
+```
+
+**区间查询：** 类似进行向下的递归和懒标记的下推，当递归到极大子区间时，将他们的 $tree$ 值加起来即可。
+
+```cpp
+int query(int cur, int l, int r, int ql, int qr) {
+    if (ql <= l and qr >= r) {
+        return tree[cur];
+    } else {
+        int mid = (r + l) / 2;
+        push(cur, l, r);
+        int ans = 0;
+        if (ql <= mid)
+            ans += query(2 * cur, l, mid, ql, qr);
+        if (qr > mid)
+            ans += query(2 * cur + 1, mid + 1, r, ql, qr);
+        return ans;
+    }
+}
+```
+
+### 例题：【模板】线段树 1
+
+> **题目链接**：[Luogu P3372](https://www.luogu.com.cn/problem/P3372)
+>
+> **题目描述**
+>
+> 如题，已知一个数列 $\{a_i\}$，你需要进行下面两种操作：
+>
+> 1. 将某区间每一个数加上 $k$。
+> 2. 求出某区间每一个数的和。
+>
+> **输入格式**
+>
+> 第一行包含两个整数 $n, m$，分别表示该数列数字的个数和操作的总个数。
+>
+> 第二行包含 $n$ 个用空格分隔的整数 $a_i$，其中第 $i$ 个数字表示数列第 $i$ 项的初始值。
+>
+> 接下来 $m$ 行每行包含 $3$ 或 $4$ 个整数，表示一个操作，具体如下：
+>
+> 1. `1 x y k`：将区间 $[x, y]$ 内每个数加上 $k$。
+> 2. `2 x y`：输出区间 $[x, y]$ 内每个数的和。
+>
+> **输出格式**
+>
+> 输出包含若干行整数，即为所有操作 2 的结果。
+>
+> **数据范围**
+>
+> - 对于 $15\%$ 的数据：$n \le 8$，$m \le 10$。
+> - 对于 $35\%$ 的数据：$n \le {10}^3$，$m \le {10}^4$。
+> - 对于 $100\%$ 的数据：$1 \le n, m \le {10}^5$，$a_i,k$ 为正数，且任意时刻数列的和不超过 $2\times 10^{18}$。
+>
+
+#### Code
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const ll MOD = 998244353;
+
+struct seg {
+    vector<ll> tree;
+    vector<ll> lazy;
+    ll N;
+    explicit seg(vector<ll> arr) {
+        N = arr.size();
+        tree.resize(2 * N);
+        lazy.resize(2 * N);
+        fill(lazy.begin(), lazy.end(), 0);
+        for (ll i = 0; i < N; ++i) {
+            tree[i + N] = arr[i];
+        }
+    }
+
+    void build(ll cur) {
+        if (cur < N) {
+            build(2 * cur);
+            build(2 * cur + 1);
+            tree[cur] = tree[2 * cur] + tree[2 * cur + 1];
+        }
+    }
+
+    void push(ll cur, ll l, ll r) {
+        if (cur < N and lazy[cur] != 0) {
+            ll amount = (r - l + 1) / 2 * lazy[cur];
+            tree[2 * cur] += amount;
+            tree[2 * cur + 1] += amount;
+            lazy[2 * cur] += lazy[cur];
+            lazy[2 * cur + 1] += lazy[cur];
+            lazy[cur] = 0;
+        }
+    }
+
+    void modify(ll cur, ll l, ll r, ll ql, ll qr, ll delta) {
+        if (ql <= l and qr >= r) {
+            lazy[cur] += delta;
+            tree[cur] += delta * (r - l + 1);
+        } else {
+            ll mid = (r + l) / 2;
+            push(cur, l, r);
+            if (ql <= mid)
+                modify(2 * cur, l, mid, ql, qr, delta);
+            if (qr > mid)
+                modify(2 * cur + 1, mid + 1, r, ql, qr, delta);
+            tree[cur] = tree[2 * cur] + tree[2 * cur + 1];
+        }
+    }
+
+    ll query(ll cur, ll l, ll r, ll ql, ll qr) {
+        if (ql <= l and qr >= r) {
+            return tree[cur];
+        } else {
+            ll mid = (r + l) / 2;
+            push(cur, l, r);
+            ll ans = 0;
+            if (ql <= mid)
+                ans += query(2 * cur, l, mid, ql, qr);
+            if (qr > mid)
+                ans += query(2 * cur + 1, mid + 1, r, ql, qr);
+            return ans;
+        }
+    }
+};
+
+void solve() {
+    ll n, m, x, y, z, k;
+    cin >> n >> m;
+    ll upper = pow(2, ceil(log2(n)));
+    vector<ll> a(upper, 0);
+    for (ll i = 0; i < n; ++i)
+        cin >> a[i];
+
+    seg s = seg(a);
+    s.build(1);
+
+    for (ll i = 0; i < m; ++i) {
+        cin >> z;
+        if (z == 1) {
+            cin >> x >> y >> k;
+            s.modify(1, 1, upper, x, y, k);
+        } else if (z == 2) {
+            cin >> x >> y;
+            cout << s.query(1, 1, upper, x, y) << "\n";
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    solve();
+    return 0;
+}
+```
+
+### 例题：【模板】线段树 2
+
+> **题目链接**：[Luogu P3373](https://www.luogu.com.cn/problem/P3373)
+>
+> **题目描述**
+>
+> 如题，已知一个数列 $a$，你需要进行下面三种操作：
+>
+> - 将某区间每一个数乘上 $x$；
+> - 将某区间每一个数加上 $x$；
+> - 求出某区间每一个数的和。
+>
+> **输入格式**
+>
+> 第一行包含三个整数 $n,q,m$，分别表示该数列数字的个数、操作的总个数和模数。
+>
+> 第二行包含 $n$ 个用空格分隔的整数，其中第 $i$ 个数字表示数列第 $i$ 项的初始值 $a_i$。
+>
+> 接下来 $q$ 行每行包含若干个整数，表示一个操作，具体如下：
+>
+> 操作 $1$：格式：`1 x y k`，含义：将区间 $[x,y]$ 内每个数乘上 $k$。
+>
+> 操作 $2$：格式：`2 x y k`，含义：将区间 $[x,y]$ 内每个数加上 $k$。
+>
+> 操作 $3$：格式：`3 x y`，含义：输出区间 $[x,y]$ 内每个数的和对 $m$ 取模所得的结果。
+>
+> **输出格式**
+>
+> 输出包含若干行整数，即为所有操作 $3$ 的结果。
+>
+> **数据范围**
+>
+> - 对于 $30\%$ 的数据：$n \le 8$，$q \le 10$；
+> - 对于 $70\%$ 的数据：$n \le 10^3$，$q \le 10^4$；
+> - 对于 $100\%$ 的数据：$1 \le n \le 10^5$，$1 \le q \le 10^5$，$1\le a_i,k\le 10^4$。
+>
+> 除样例外，$m = 571373$。
+>
+
+#### Solution
+//
+
+#### Code
+
+```cpp
+
+```
