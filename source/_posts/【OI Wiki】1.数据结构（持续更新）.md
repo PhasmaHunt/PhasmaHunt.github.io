@@ -655,7 +655,7 @@ int main()
 
 ### 问题
 
-解决区间上 **可重复贡献问题** 的快速查询。（不支持修改操作）
+解决区间上 **可重复贡献问题** 的快速（ $O(1)$ ）查询。（不支持修改操作）
 
 **可重复贡献问题** 是指对于运算 $opt$![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\operatorname{opt}")，满足 $x\ opt\ x\ =\ x$ ，在区间上询问元素 $opt$ 之和的问题。
 例如：$max$ ，$gcd$ 就是符合的 $opt$ 。
@@ -665,16 +665,28 @@ int main()
 
 使用 **倍增** 思想，通过 $O(\log N)$ 的预处理一些区间和，使得任意的 $[l_i,\ r_i]$ 都可以被两个预处理区间覆盖。使用大小为 $2^i$ 的一系列区间，使得总存在一个 $i$ ，使得 $[l,\ l+2^i-1]$ 和 $[r-2^i+1,\ r]$ 可以达到覆盖。 通过计算可知：$i=\lfloor {\log _2 (r-l+1)} \rfloor$ 。因此查询只要 $O(1)$ 的时间。
 
-**预处理：** 令 $f(i,j)$ 表示 $[l,\ l+2^i-1]$ 上的最大值。从 $f(i,0)=a_i$ 开始倍增，$f(i,j+1)=max(f(i,j),f(i+2^j,j))$ 。
+**预处理：** 令 $f(i,j)$ 表示 $[i,\ i+2^j-1]$ 上的最大值。从 $f(i,0)=a_i$ 开始倍增，$f(i,j+1)=max(f(i,j),f(i+2^j,j))$ 。
 
 ```cpp
-//
+int max_j = floor(log2(n));
+vector<vector<int>> f(n, vector<int>(max_j + 1));
+for (int i = 0; i < n; ++i) {
+    f[i][0] = a[i];
+}
+for (int j = 0; j < max_j; ++j) {
+    for (int i = 0; i <= n - pow(2, j + 1); ++i) {
+        f[i][j + 1] = max(f[i][j], f[i + pow(2, j)][j]);
+    }
+}
 ```
 
-**查询：** 使用$[l,\ l+2^i-1]$ 和 $[r-2^i+1,\ r]$ 可以达到覆盖，也就是 $max([l,\ r])=max(f(l,i),\ f(r-2^i+1,i))$ 。
+**查询：** 使用$[l,\ l+2^i-1]$ 和 $[r-2^i+1,\ r]$ 可以达到覆盖，也就是 $max([l,\ r])=max(f(l,i),\ f(r-2^i+1,i))$ 。其中 $i=\lfloor {\log _2 (r-l+1)} \rfloor$ 。
 
 ```cpp
-//
+int query(int l, int r){
+    cover = floor(log2(r - l + 1));
+    return max(f[l - 1][cover], f[r - pow(2, cover)][cover]);
+}
 ```
 
 ### 例题：【模板】ST 表 & RMQ 问题
@@ -707,5 +719,57 @@ int main()
 #### Code
 
 ```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const ll MOD = 998244353;
 
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+    vector<ll> a(n);
+    for (ll i = 0; i < n; ++i) {
+        cin >> a[i];
+    }
+    
+    ll max_j = floor(log2(n));
+    vector<vector<ll>> f(n, vector<ll>(max_j + 1));
+    for (ll i = 0; i < n; ++i) {
+        f[i][0] = a[i];
+    }
+    for (ll j = 0; j < max_j; ++j) {
+        for (ll i = 0; i <= n - pow(2, j + 1); ++i) {
+            f[i][j + 1] = max(f[i][j], f[i + pow(2, j)][j]);
+        }
+    }
+    
+    ll l, r, ans, cover;
+    for (ll i = 0; i < m; ++i) {
+        cin >> l >> r;
+        cover = floor(log2(r - l + 1));
+        ans = max(f[l - 1][cover], f[r - pow(2, cover)][cover]);
+        cout << ans << "\n";
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    solve();
+    return 0;
+}
 ```
+
+## 8. 线段树
+
+### 问题
+
+解决区间上 **可结合问题** 的 $O(\log N)$ 修改，查询。
+相比于**数组** 的 $O(1)$ 修改， $O(N)$ 查询；**前缀和** 的 $O(N)$ 修改， $O(1)$ 查询。**线段树** 给出了一种折中的快速修改，查询的方式。
+
+**可结合问题** 是指对于运算 $+$，满足结合律 $(a+b)+c=a+(b+c)$ ，且空集对应的数值为 $e$ 是加法的单位元，在区间上修改，询问元素 $+$ 的问题。
+例如：$(N,\ +)$ ，$(N,\ \times)$ 就是符合的 $+$ 。
+也就是说 $+$ 构成一个幺半群，且使用多段不相交预处理的区间和，覆盖住待查询的区间，他们的区间和就等于待查询的区间的总和。
+![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "x\operatorname{opt} x=x")
+### 实现
+
