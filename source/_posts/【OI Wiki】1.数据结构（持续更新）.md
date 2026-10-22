@@ -1031,10 +1031,151 @@ int main() {
 >
 
 #### Solution
-//
+
+类似于传统的线段树，但是我们为了维护两个运算的操作，开两个懒标记 $plus$ 和 $times$ 去处理，并且规定该节点的所有对应叶子的真实值为 $tree \times times +plus$ ，也就是说，该节点的真实值为 $tree \times times +plus \times (r-l+1)$ ，类似进行区间修改和查询即可。 
 
 #### Code
 
 ```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
 
+struct seg {
+    vector<ll> tree;
+    vector<ll> plus;
+    vector<ll> times;
+    ll N;
+    ll MOD;
+    explicit seg(vector<ll> arr, ll m) {
+        N = arr.size();
+        MOD = m;
+        tree.resize(2 * N);
+        plus.resize(2 * N);
+        times.resize(2 * N);
+        fill(plus.begin(), plus.end(), 0);
+        fill(times.begin(), times.end(), 1);
+        for (ll i = 0; i < N; ++i) {
+            tree[i + N] = arr[i];
+        }
+    }
+
+    void build(ll cur) {
+        if (cur < N) {
+            build(2 * cur);
+            build(2 * cur + 1);
+            tree[cur] = (tree[2 * cur] + tree[2 * cur + 1]) % MOD;
+        }
+    }
+
+    void push(ll cur, ll l, ll r) {
+        if (cur < N and (plus[cur] != 0 or times[cur] != 1)) {
+            ll amount = (r - l + 1) / 2 * plus[cur];
+            tree[2 * cur] *= times[cur];
+            tree[2 * cur + 1] *= times[cur];
+            tree[2 * cur] += amount;
+            tree[2 * cur + 1] += amount;
+            tree[2 * cur] %= MOD;
+            tree[2 * cur + 1] %= MOD;
+
+            times[2 * cur] *= times[cur];
+            times[2 * cur + 1] *= times[cur];
+            times[2 * cur] %= MOD;
+            times[2 * cur + 1] %= MOD;
+
+            plus[2 * cur] = plus[2 * cur] * times[cur] + plus[cur];
+            plus[2 * cur + 1] = plus[2 * cur + 1] * times[cur] + plus[cur];
+            plus[2 * cur] %= MOD;
+            plus[2 * cur + 1] %= MOD;
+
+            times[cur] = 1;
+            plus[cur] = 0;
+        }
+    }
+
+    void add(ll cur, ll l, ll r, ll ql, ll qr, ll delta) {
+        if (ql <= l and qr >= r) {
+            plus[cur] += delta;
+            tree[cur] += delta * (r - l + 1);
+            plus[cur] %= MOD;
+            tree[cur] %= MOD;
+        } else {
+            ll mid = (r + l) / 2;
+            push(cur, l, r);
+            if (ql <= mid)
+                add(2 * cur, l, mid, ql, qr, delta);
+            if (qr > mid)
+                add(2 * cur + 1, mid + 1, r, ql, qr, delta);
+            tree[cur] = (tree[2 * cur] + tree[2 * cur + 1]) % MOD;
+        }
+    }
+    void mutiple(ll cur, ll l, ll r, ll ql, ll qr, ll delta) {
+        if (ql <= l and qr >= r) {
+            plus[cur] *= delta;
+            times[cur] *= delta;
+            tree[cur] *= delta;
+            plus[cur] %= MOD;
+            times[cur] %= MOD;
+            tree[cur] %= MOD;
+        } else {
+            ll mid = (r + l) / 2;
+            push(cur, l, r);
+            if (ql <= mid)
+                mutiple(2 * cur, l, mid, ql, qr, delta);
+            if (qr > mid)
+                mutiple(2 * cur + 1, mid + 1, r, ql, qr, delta);
+            tree[cur] = (tree[2 * cur] + tree[2 * cur + 1]) % MOD;
+        }
+    }
+
+    ll query(ll cur, ll l, ll r, ll ql, ll qr) {
+        if (ql <= l and qr >= r) {
+            return tree[cur];
+        } else {
+            ll mid = (r + l) / 2;
+            push(cur, l, r);
+            ll ans = 0;
+            if (ql <= mid)
+                ans += query(2 * cur, l, mid, ql, qr);
+            if (qr > mid)
+                ans += query(2 * cur + 1, mid + 1, r, ql, qr);
+            ans %= MOD;
+            return ans;
+        }
+    }
+};
+
+void solve() {
+    ll n, q, m, x, y, z, k;
+    cin >> n >> q >> m;
+    ll upper = pow(2, ceil(log2(n)));
+    vector<ll> a(upper, 0);
+    for (ll i = 0; i < n; ++i)
+        cin >> a[i];
+
+    seg s = seg(a, m);
+    s.build(1);
+
+    for (ll i = 0; i < q; ++i) {
+        cin >> z;
+        if (z == 1) {
+            cin >> x >> y >> k;
+            s.mutiple(1, 1, upper, x, y, k);
+        } else if (z == 2) {
+            cin >> x >> y >> k;
+            s.add(1, 1, upper, x, y, k);
+        } else if (z == 3) {
+            cin >> x >> y;
+            cout << s.query(1, 1, upper, x, y) << "\n";
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    solve();
+    return 0;
+}
 ```
+
